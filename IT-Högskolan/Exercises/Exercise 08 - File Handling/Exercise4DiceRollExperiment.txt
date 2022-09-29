@@ -1,0 +1,43 @@
+Number of throws: 10 
+1's: 4, probability: 0.4 
+ 2's: 1, probability: 0.1 
+ 3's: 1, probability: 0.1 
+ 4's: 3, probability: 0.3 
+ 5's: 1, probability: 0.1 
+ 6's: 0, probability: 0.0 
+ Number of throws: 100 
+1's: 17, probability: 0.17 
+ 2's: 16, probability: 0.16 
+ 3's: 14, probability: 0.14 
+ 4's: 17, probability: 0.17 
+ 5's: 13, probability: 0.13 
+ 6's: 23, probability: 0.23 
+ Number of throws: 1000 
+1's: 152, probability: 0.152 
+ 2's: 148, probability: 0.148 
+ 3's: 176, probability: 0.176 
+ 4's: 177, probability: 0.177 
+ 5's: 189, probability: 0.189 
+ 6's: 158, probability: 0.158 
+ Number of throws: 10000 
+1's: 1677, probability: 0.1677 
+ 2's: 1613, probability: 0.1613 
+ 3's: 1740, probability: 0.174 
+ 4's: 1664, probability: 0.1664 
+ 5's: 1660, probability: 0.166 
+ 6's: 1646, probability: 0.1646 
+ Number of throws: 100000 
+1's: 16651, probability: 0.16651 
+ 2's: 16681, probability: 0.16681 
+ 3's: 16795, probability: 0.16795 
+ 4's: 16836, probability: 0.16836 
+ 5's: 16590, probability: 0.1659 
+ 6's: 16447, probability: 0.16447 
+ Number of throws: 1000000 
+1's: 165904, probability: 0.165904 
+ 2's: 167073, probability: 0.167073 
+ 3's: 166727, probability: 0.166727 
+ 4's: 166532, probability: 0.166532 
+ 5's: 166838, probability: 0.166838 
+ 6's: 166926, probability: 0.166926 
+ 
