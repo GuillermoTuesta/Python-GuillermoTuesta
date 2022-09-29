@@ -6,7 +6,10 @@
 
 import matplotlib.pyplot as plt
 
-def Classify(TestPoint, MeasurementList = None, Amount=10): 
+import sys 
+import os # sys and os imported to make file pathing easier.
+
+def Classify(TestPoint, SaveData = False, AdditionalData = False, Amount=10): 
 	if type(TestPoint) != list:
 		print("Classify Function: 'TestPoint' Parameter is not a list!")
 		return None
@@ -23,14 +26,13 @@ def Classify(TestPoint, MeasurementList = None, Amount=10):
 		print("Function 'Classify': 'Amount' has to be an even number for comparison purposes.")
 		return None
 
-	if MeasurementList:
-		LocalMeasurementList = [Measurement for Measurement in MeasurementList]
-		print("Classify Function: MeasurementList Parameter Error - Defaulting to AllMeasurements list!")
-	else:
-		LocalMeasurementList = [Measurement for Measurement in AllMeasurements] # NOTE!!! ALL MEASUREMENTS IS DEFAULT AND REFERENCED DIRECTLY. IT CAN BE OVERRIDEN IF MEASUREMENTLIST IS PASSED A LIST.
-
 	#DistanceLambda = lambda GivenList: ((GivenList[0] - TestPoint[0])**2 + (GivenList[1] - TestPoint[1])**2)**(1/2)  # Lambda function to filter the TempList. Used only inside this function.
 	#DistanceList = list(map(DistanceLambda, LocalMeasurementList))
+
+
+	LocalMeasurementList = AllMeasurements
+	if AdditionalData:
+		print("test")
 
 	ClassBool = None
 	Distances = {}
@@ -75,19 +77,21 @@ def Classify(TestPoint, MeasurementList = None, Amount=10):
 			ClassBool = False
 	
 	if (ClassBool or not ClassBool) and SaveData:
-		Class = 1 if ClassBool else 0
-		AdditionalDataPoints.write(f"{[TestPoint[0], TestPoint[1], Class]}\n")
+		AdditionalDataAppend.write(f"{[TestPoint[0], TestPoint[1], ClassBool]}\n") # Append to additional datapoints file if SaveData is true and the point was classified.
 	
 	if ClassBool == None:
-		print("Testpoint is utterly ambiguous. No majority nor index score winner - This function returns None.")
+		print("Testpoint is utterly ambiguous. No majority nor index score winner - This function returns None. Appended to AmbiguousPoints.txt.")
+		AmbiguousPoints.write(f"{[TestPoint[0], TestPoint[1], ClassBool]}\n")
 
 	return ClassBool # Classbool is None if datapoint couldn't be classified. ClassBool is True if datapoint was classified as Pikachu, and false if it was Pichu.
 
 
-DataPoints = open("IT-Högskolan/AI-Labb2/datapoints.txt", "r") 
-TestPoints = open("IT-Högskolan/AI-Labb2/testpoints.txt", "r") 
-AdditionalDataPoints = open("IT-Högskolan/AI-Labb2/AdditionalDatapoints.txt", "a")
-# Had weird issues with python not finding the text files despite sharing folders with them. I'll just use the relative path.
+DataPoints = open(os.path.join(sys.path[0] , "datapoints.txt"), "r")  
+TestPoints = open(os.path.join(sys.path[0] , "testpoints.txt"), "r") 
+AdditionalDataAppend = open(os.path.join(sys.path[0] , "AdditionalDatapoints.txt"), "a")
+AdditionalDataRead =  open(os.path.join(sys.path[0] , "AdditionalDatapoints.txt"), "r")
+AmbiguousPoints = open(os.path.join(sys.path[0] , "AmbiguousPoints.txt"), "a") 
+# This is why I imported sys and os. https://www.tutorialspoint.com/How-to-open-a-file-in-the-same-directory-as-a-Python-script 
 
 DataPoints.readline()
 TestPoints.readline() # Skipping the first lines before looping through the files.
@@ -103,41 +107,62 @@ for DataPoint in DataPoints:
 	PichuData.append(DataArray)
 # Reads file line by line, clean up string and append them as an array.
 
-AllMeasurements = [*PikachuData, *PichuData]
+AllMeasurements = [*PikachuData, *PichuData] # To more easily loop through all relevant data.
 
 TestMeasurements = []
 for TestPoint in TestPoints:
 	TestPoint = TestPoint.split()
 	TestMeasurements.append([float(TestPoint[1][1:-1]),  float(TestPoint[2][:-1])]) # Some specific string manipulation so I can convert to float.
 
+AdditionalData = []
+for AdditionalDataPoint in AdditionalDataRead:
+	SplitPoint = AdditionalDataPoint.split(',')
+	ClassNum = 1 if SplitPoint[-1] == "True" else 0 
+	AdditionalData.append([float(SplitPoint[0][1:]), float(SplitPoint[1]), bool(ClassNum)])
+
 for LegendIndex, Data in enumerate(PikachuData):
 	if not LegendIndex:
-		plt.scatter(Data[0], Data[1], label="Pika", color="r") 
+		plt.scatter(Data[0], Data[1], label="Pikachu data points", color="r") 
 		continue
 	plt.scatter(Data[0], Data[1], color="r") # Red for Pikachu.
 
 for LegendIndex, Data in enumerate(PichuData):
 	if not LegendIndex:
-		plt.scatter(Data[0], Data[1], label="Pichu", color="b")
+		plt.scatter(Data[0], Data[1], label="Pichu data points", color="b")
 		continue
 	plt.scatter(Data[0], Data[1], color="b") # Blue for Pichu.
 
 for LegendIndex, Data in enumerate(TestMeasurements):
 	if not LegendIndex:
-		plt.scatter(Data[0], Data[1], label="TestPoint", color='black') # Black for test points.
+		plt.scatter(Data[0], Data[1], label="Test data Points", color='black') # Black for test points.
 		continue
 	plt.scatter(Data[0], Data[1], color="b")
 
+UserAdditionalFlag = input("Input Y/N to whether you want to use additional datapoints (AdditionalDatapoints.txt) along with Datapoints.txt: ")
+AdditionalDataFlag = False
+
+if UserAdditionalFlag.lower() in "yes":
+	print("Adding and plotting additional (Pink) datapoints...\n")
+	AdditionalDataFlag = True
+	AllMeasurements += AdditionalData # Adds the additional data to all measurements to be used.
+	for LegendIndex, Data in enumerate(AdditionalData):
+		if not LegendIndex:
+			plt.scatter(Data[0], Data[1], label="Additional Datapoints", color='Pink') # Pink for Additional Data points.
+			continue
+		plt.scatter(Data[0], Data[1], color="Pink")
+
 plt.title("Scattered datapoints.")    
-plt.xlabel("Width")
-plt.ylabel("Height")
+plt.xlabel("Width(cm)")
+plt.ylabel("Height(cm)")
 plt.legend()
-plt.show()
+plt.show()	#Could also consider putting this inside the loop somehow to show the plot after each entered datapoint if wanted by the user.
 
 while True:
-	UserInput = input(f"Enter two numbers 'a,b' to compare to datapoints (Enter 'exit' to exit program): ")
-	if UserInput in 'ExitEXIT':
-		print("You have exited the program.")
+	UserInput = input(f"Enter two numbers 'a,b' to compare to datapoints (Enter a variation of 'exit' or nothing to exit): ")
+	if UserInput.lower() in 'exit' or UserInput == ' ':
 		break
-	UserTestPoint = [float(UserInput.split()[0]), float(UserInput.split()[-1])] # Turn UserInput into list of floats.
-	print(f" Classify(UserTestPoint) = {Classify(UserTestPoint)}")
+	print("Classifying.. \n")
+	UserTestPoint = [float(UserInput.split(',')[0]), float(UserInput.split(',')[-1])] # Turn UserInput into list of floats.
+	print(f" Classify(UserTestPoint) = {Classify(UserTestPoint, SaveData = True)}")
+
+print("Exiting program..")
