@@ -26,10 +26,6 @@ def Classify(TestPoint, SaveData = False, AdditionalData = False, Amount=10):
 		print("Function 'Classify': 'Amount' has to be an even number for comparison purposes.")
 		return None
 
-	#DistanceLambda = lambda GivenList: ((GivenList[0] - TestPoint[0])**2 + (GivenList[1] - TestPoint[1])**2)**(1/2)  # Lambda function to filter the TempList. Used only inside this function.
-	#DistanceList = list(map(DistanceLambda, LocalMeasurementList))
-
-
 	LocalMeasurementList = AllMeasurements
 	if AdditionalData:
 		print("test")
@@ -76,7 +72,7 @@ def Classify(TestPoint, SaveData = False, AdditionalData = False, Amount=10):
 		if PikaIndexSum <= MajorityPoint - 1:
 			ClassBool = False
 	
-	if (ClassBool or not ClassBool) and SaveData:
+	if (ClassBool == True or ClassBool == False) and SaveData:
 		AdditionalDataAppend.write(f"{[TestPoint[0], TestPoint[1], ClassBool]}\n") # Append to additional datapoints file if SaveData is true and the point was classified.
 	
 	if ClassBool == None:
@@ -91,7 +87,7 @@ TestPoints = open(os.path.join(sys.path[0] , "testpoints.txt"), "r")
 AdditionalDataAppend = open(os.path.join(sys.path[0] , "AdditionalDatapoints.txt"), "a")
 AdditionalDataRead =  open(os.path.join(sys.path[0] , "AdditionalDatapoints.txt"), "r")
 AmbiguousPoints = open(os.path.join(sys.path[0] , "AmbiguousPoints.txt"), "a") 
-# This is why I imported sys and os. https://www.tutorialspoint.com/How-to-open-a-file-in-the-same-directory-as-a-Python-script 
+#This is why I imported sys and os. 
 
 DataPoints.readline()
 TestPoints.readline() # Skipping the first lines before looping through the files.
@@ -117,12 +113,12 @@ for TestPoint in TestPoints:
 AdditionalData = []
 for AdditionalDataPoint in AdditionalDataRead:
 	SplitPoint = AdditionalDataPoint.split(',')
-	ClassNum = 1 if SplitPoint[-1] == "True" else 0 
+	ClassNum = 1 if SplitPoint[-1] == "True" else 0
 	AdditionalData.append([float(SplitPoint[0][1:]), float(SplitPoint[1]), bool(ClassNum)])
 
 for LegendIndex, Data in enumerate(PikachuData):
 	if not LegendIndex:
-		plt.scatter(Data[0], Data[1], label="Pikachu data points", color="r") 
+		plt.scatter(Data[0], Data[1], label="Pikachu data points", color="r") # LegendIndex is used to apply the label only once.
 		continue
 	plt.scatter(Data[0], Data[1], color="r") # Red for Pikachu.
 
