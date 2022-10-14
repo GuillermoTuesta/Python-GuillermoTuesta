@@ -206,6 +206,8 @@ class Rectangle(Polygon):
 	def base(self, value):
 		if not isinstance(value, numbers.Number):
 			raise TypeError(f'Given base value is of type {type(value)}')
+		if value < 0:
+			raise ValueError(f'Given base value ({value}) is below zero.')
 		self._base = value
 		self._area = None
 		self._circumference = None
@@ -218,13 +220,15 @@ class Rectangle(Polygon):
 	def height(self, value):
 		if not isinstance(value, numbers.Number):
 			raise TypeError(f'Given height value is of type {type(value)}')
+		if value < 0:
+			raise ValueError(f'Given height value ({value}) is below zero.')
 		self._height = value
 		self._area = None
 		self._circumference = None
 
 	@property
 	def area(self):
-		if self._area == None:
+		if self._area == None: 
 			self._area = self.base * self.height
 		return self._area
 	
