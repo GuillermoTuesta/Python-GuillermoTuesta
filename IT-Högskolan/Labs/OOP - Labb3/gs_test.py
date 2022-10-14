@@ -31,7 +31,6 @@ class Polygon(ABC):
 		self.y = new_y # Still calls the class' @property.setters
 
 	# OVERLOADS
-	# All comparisons are now about area.
 	def __eq__(self, other):
 		if not isinstance(other, type(self)):
 			raise TypeError(f"__eq__(==) operator type mismatch: Can only compare same shapes: type(self) = {type(self)}, type(other) = {type(other)}")
@@ -56,6 +55,22 @@ class Polygon(ABC):
 		if not isinstance(other, type(self)):
 			raise TypeError(f"__ge__(>=) operator type mismatch: Can only compare same shapes: type(self) = {type(self)}, type(other) = {type(other)}")	
 		return self.area >= other.area
+
+
+class Coordinate(): # Data descriptor class for coordinates, handles input validationg for setting, and handles getting.
+	def __set_name__(self, owner, name):
+		self.private_name = '_' + name
+
+	def __get__(self, instance, owner):
+		print("Descriptor get..")
+		return getattr(obj, self.private_name)
+
+	def __set__(self, instance, value):
+		print("Initiating cord set..")
+		if isinstance(value, float) or isinstance(value, int):
+			instance.__dict__[self._name] = float(value)
+		else:
+			raise AttributeError(f'Given coordinate, {value} couldn''t be converted to float.')
 
 class Circle(Polygon):
 	'''A Class to represent circles.
