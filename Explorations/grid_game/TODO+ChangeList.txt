@@ -1,0 +1,10 @@
+1. 'MapArray' class to create, seed and hold current MapArrays.
+2. 'Grids' class to create and hold all grids created from MapArray?
+3. Iterator class to give cords to CraftingSeqs?
+
+Far fetched(?):
+1. 3. 'Grid' class will hold all cords it's given, and render it's own image onto each cord (Instead of having a grid object for every single grid)
+
+2022-11-06
+1. Added inventory descriptor class, used within character.
+2. Changed the class CraftingSquare class into CraftingSeq, which can now hold an entire crafting branch instead of singular items. (It can hold all axes at once, instead of making a new class for each)
