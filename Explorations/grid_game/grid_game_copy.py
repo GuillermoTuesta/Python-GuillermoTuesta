@@ -163,10 +163,8 @@ class Character:
             raise TypeError(f'Character class cord setter: new_cords not a tuple, it''s of type {type(new_cords)}')
         if len(new_cords) != 2:
             raise AttributeError(f'Character class cord setter: len(new_cords) = {len(new_cords)}. Can only be of length 2')
-        if new_cords not in mapper.valid_cords: # I believe coordinates should always follow these conditions, so I'm putting them in the decorator.
-            raise ValueError(f'Character class cords.setter: Given cords are out of bounds ({new_cords}).')
-        if grids[new_cords[0] + new_cords[1] * 16].walkable:
-                self._cords = new_cords
+        if new_cords not in mapper.valid_cords:
+            raise ValueError(f'Character class cords.setter: Given cords are out of bounds ({new_cords}).')        
 
     def move(self):
         PressedKey = event.key # Save the key that was pressed.
@@ -179,13 +177,14 @@ class Character:
             self.cords = (x - 1, y)
         if PressedKey == pygame.K_RIGHT:
             self.cords = (x + 1, y)
+        
+        if not grids[self.cords[0] + (self.cords[1] * 16)].walkable:
 
-        if self.cords == (x, y) and event.mod and pygame.KMOD_LSHIFT: # If still standing on the same spot and pressed leftshift..
+        if self.cords == (x, y) and event.mod and pygame.KMOD_LSHIFT: # If still standing on the same spot, and the modifier key is leftshift:
             for m in pickup_resources:
                 if m.cords == self.cords: # If standing on a pickup resource, use it.
                     m.interact()
-
-        if self.cords != (x, y) and event.mod and pygame.KMOD_LSHIFT and not grids[self.cords[0] + (self.cords[1] * 16)].walkable: # If cords were successfully changed, and the modifier key is leftshift, and the target grid is not walkable:
+            print('here')
             grids[self.cords[0] + (self.cords[1] * 16)].interact() # Interact with the target grid. cords.setter handled validation already.
             self.cords = x, y # Return to previous Grid.
 
@@ -242,7 +241,7 @@ class Rock(Grid):
             grids[self.cords[0] + (self.cords[1] * 16)] = Grass(self.cords, grass_image) # Formula finds index via cords and turns itself into a grass grid.
             character.inventory.add({'Rock':5})
             if random.randint(0, 3) == 1:
-                character.inventory.add({'Iron':5})
+                character.inventory.add({'Iron':5}) # Randomly add iron sometimes.
     
     def render(self):
         screen.blit(grass_image, self.rect)

@@ -101,57 +101,66 @@ class MapArray: # First draft of MapArray class. Singleton?
             self._empty_grids = [arr[0] for arr in self.map_array if arr[0] in range (14)] # Return all grass grids (empty grids that can be spawned on)
         return self.empty_grids
 
+
+
+
+
+# Far fetched ideas...
+
+
+
+
+
+
 # https://www.codespeedy.com/__setitem__-and-__getitem__-in-python-with-example/
 # https://www.geeksforgeeks.org/singleton-pattern-in-python-a-complete-guide/
 # Testing this out so it can be more easily handled.
 # Singleton class as well, which adds all new instances to it's own list without creating objects.
-# How to add interaction???
+# And renderer should probably be it's own class, it'll handle conversions and image blitting.
 
-class InteractFuncs: # Oooh... Maybe?
-    def __init__(self, func):
-        self.
-
-class Grids:
+""" class Grids:
     # Overriding magic methods to make it a singleton and handle a list of 'instances', and handles index behaviour.
-    def __new__(cls, grid_num, img, walkable, rect=None):
+    def __new__(cls):
         if not hasattr(cls, 'instance'): # Create new instance if one doesn't already exist. Otherwise, do not create a new one.
             cls.instance = super(Grids, cls).__new__(cls)
             cls.grid_list = [None]*64 # Default value. It will only hold 64 grids.
         return cls.instance
 
     def __setitem__(cls, index: int, map_arr: list, img: *PYGAME IMAGE OBJECT*, walkable: bool, rect: *PYGAME RECT OBJECT*, interact_func: function):
-        cls[index] = [map_arr[0], map_arr[1], img, walkable, rect] # Add [Grid_num, cords, image, walkable, rect]
+        cls[index] = {'grid_num':map_arr[0], 'cords':map_arr[1], 'image':img, 'walkable':walkable, 'rect':rect} # Add {Grid_num, cords, image, walkable, rect}
 
     def __getitem__(cls, index):
-        return cls.grid_list[index] # Return item from created grid_list.
+        return cls.grid_list[index] # Return item from created grid_list. Maybe the indexing should instead follow cords instead of just 0-64?
 
     @property
     def cords(cls, index: int) -> list: # Dependant on the cord list given by the __new__ override.
-        return cls[index][1]
+        return cls[index]['cords']
 
     @property
     def image(cls, index: int) -> *image object*: # Sort of lazy property. Gets corresponding image when it's actually asked for.
-        img_element = cls[index][2] # Get img element from grid_list. Could be a name in str format.
+        img_element = cls[index]['image'] # Get img element from grid_list. Could be a name in str format.
         if img_element == str: # If it is a str, turn it into an image object.
-            cls[index][1] = pygame IMAGE TRANSFORM!!!!!
+            cls[index]['image'] = pygame IMAGE TRANSFORM!!!!!
         return img_element # Return the element.
     
     @property
     def walkable(cls, index: int) -> bool:
-        return cls[index][3]
+        return cls[index]['walkable']
     
     @property
     def rect(cls, index: int) -> *rect pygame object*: # Lazy property. Computes rect on demand.
-        rect_element = cls[index][4]
+        rect_element = cls[index]['rect']
         if rect_element == None:
-            cls[index][4] = pygame.Rect(rect_element[index][1][0] * unit_length, rect_element[index][1][0][1] * unit_length, unit_length, unit_length) # Get cords and actually make a rect.
-        return cls[index][4]
+            cls[index]['rect'] = pygame.Rect(rect_element[index][1][0] * unit_length, rect_element[index][1][0][1] * unit_length, unit_length, unit_length) # Get cords and actually make a rect.
+        return cls[index]['rect']
 
     def render_all(cls):
         for render_index in range(64):
             screen.blit(cls[render_index].image, cls[render_index].rect)
 
-
+class InteractFuncs: # Oooh... Maybe?
+    def __init__(self, func):
+        self. """
             
 
 
