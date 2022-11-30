@@ -5,7 +5,6 @@
 # good for debugging file handling issues - checks directory and file names.
 
 import matplotlib.pyplot as plt
-
 import sys 
 import os # sys and os imported to make file pathing easier.
 
@@ -36,7 +35,7 @@ def Classify(TestPoint, SaveData = False, AdditionalData = False, Amount=10):
 	while len(ClosestPoints) < Amount:
 		SmallestDistance = 9999
 		for Measurement in LocalMeasurementList: # Get the smallest value.
-			Distance = ((Measurement[0] - TestPoint[0])**2 + (Measurement[1] - TestPoint[1])**2)**(1/2) 
+			Distance = (Measurement[0] - TestPoint[0])**2 + (Measurement[1] - TestPoint[1])**2)**(1/2) 
 			if Distance < SmallestDistance:
 				SmallestDistance = Distance
 				ClosestPoint = Measurement
