@@ -62,23 +62,29 @@ class MapArray: # Handles map array creation.
 
     @property
     def grass_cords(self) -> list: # Lazy properties. No setters needed.
+        if self.current_map == None:
+            return None
         if self._grass_cords == None:
             self._grass_cords = [grid_arr[1] for grid_arr in self.current_map if grid_arr[0] in range(14)] # Makes a list of cords that have a grass grid_num.
         return self._grass_cords
     
     @property
     def seed(self) -> list:
+        if self.current_map == None:
+            return None
         if self._seed == None:
-            self._seed = [grid_arr[0] for grid_arr in self.current_map] # Append all grid_nums from current map.
+            self._seed = [grid_arr[0] for grid_arr in self.current_map] # Add all grid_nums from current map.
         return self._seed
 
     @property
     def valid_cords(self) -> list:
+        if self.current_map == None:
+            return None
         if self._valid_cords == None:
             self._valid_cords = [grid_arr[1] for grid_arr in self.current_map] # Save all valid cords.
         return self._valid_cords
 
-    def generate_map_array(self, seed=None) -> list: # Seeds are a list of numbers between 0, 23.
+    def generate_map_array(self, seed=None) -> list: # Seeds are a list of numbers between 0-23.
         new_map = []
         for y in range(16):
             for x in range(16):  
@@ -86,14 +92,14 @@ class MapArray: # Handles map array creation.
                 new_map.append([grid_num, (x, y)]) # Append grid_num and corresponding cord.
 
         self.current_map = new_map
-        self._grass_grids = None # Reset grass grids.
+        self._grass_cords = None # Reset grass grids.
         self._seed = None # Reset seed.
 
 mapper = MapArray() # Immediately make an instance.
 mapper.generate_map_array()
 
 class Inventory: # Inventory class to handle everything to do with the character's inventory.
-    def __init__(self, starting_inventory:dict = {'Wood': 0, 'Rock': 0, 'Iron': 0}): # Ugly default value for starting_list.
+    def __init__(self, starting_inventory:dict = {'Wood': 0, 'Rock': 0, 'Iron': 0}): # Default value for starting_list.
         self.current_inventory = starting_inventory
     
     @property
@@ -104,7 +110,7 @@ class Inventory: # Inventory class to handle everything to do with the character
     def current_inventory(self, dict_value: dict):
         if not isinstance(dict_value, dict):
             raise TypeError(f'Inventory descriptor class in Character, __set__: Given dict_value is not a dictionary. type(dict_value) = {type(dict_value)} ')
-        if len(dict_value) != 3: # Ugly default value! I only have 3 resources in the game at the moment.
+        if len(dict_value) != len(self.current_inventory): # Relies on the default starting value being 3, therefore making only itself the valid length.
             raise ValueError(f'Inventory descriptor class in Character, __set__: Given dict_value is not of length 3. len(dict_value) = {len(dict_value)} ')
         for value_index, value in dict_value.items():
             if value < 0:
